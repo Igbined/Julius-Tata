@@ -1,3 +1,7 @@
 // Keep this external for security
-export const TELEGRAM_TOKEN = "8627226047:AAE1td1D47U5YeGNzp7Hsr5iNo4E4KCMeiI";
-export const TELEGRAM_CHAT_ID = "7274905832";
+// config.js
+const CONFIG = {
+    DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/1489579300687577279/fMVQanQ8kgUHZ9a_G39YhvpKjHnCmJmljDDHR9ntSa7bUAPMh1Axq0AK4VRumc10Npau"
+};
+
+export default CONFIG;
